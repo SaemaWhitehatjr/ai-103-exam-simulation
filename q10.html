@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-103 Case Study Practice - Question 10</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="topbar">
+  <a href="../index.html">&larr; Back to case study menu</a>
+  <span class="badge">Question 10 of 12 &middot; High difficulty</span>
+</div>
+<div class="container">
+  <div class="qmeta">
+    <span class="domain-tag">Implement Information Extraction Solutions</span>
+    <span class="qnum">Question 10: Grounding a Field to Its Source Location</span>
+  </div>
+
+  <h2>Case Study: Meridian Outfitters - RangerOps Project</h2>
+  <div id="cs3">
+    <div class="tabs"><button type="button" class="tab-btn active" onclick="showTab('cs3','cs3-tab0',this)">Scenario</button><button type="button" class="tab-btn" onclick="showTab('cs3','cs3-tab1',this)">Existing Environment</button><button type="button" class="tab-btn" onclick="showTab('cs3','cs3-tab2',this)">Planned Changes</button><button type="button" class="tab-btn" onclick="showTab('cs3','cs3-tab3',this)">Technical Requirements</button><button type="button" class="tab-btn" onclick="showTab('cs3','cs3-tab4',this)">Security and Compliance Requirements</button><button type="button" class="tab-btn" onclick="showTab('cs3','cs3-tab5',this)">Business Requirements</button></div>
+    <div id="cs3-tab0" class="tab-panel active"><p>Meridian Outfitters is an outdoor-gear manufacturer and retailer that uses Microsoft Foundry
+      to run a project named RangerOps. The project contains multiple agents that support customer service,
+      vendor invoice reconciliation, and warranty processing.</p></div><div id="cs3-tab1" class="tab-panel"><ul>
+      <li>Meridian uses Microsoft Entra ID for identity. Two security groups exist: <strong>SC_RangerOps_Dev</strong>
+        (the RangerDev engineering team) and <strong>SC_RangerOps_Test</strong> (the RangerTest validation team).</li>
+      <li>An agent named <strong>Ranger1</strong> answers customer product questions. It currently uses a base model
+        deployment with no content-safety pipeline, no tool-approval workflow, and no conversation-memory configuration.</li>
+      <li>A second agent, <strong>InvoiceBot</strong>, is planned to reconcile vendor invoices against contract terms.
+        Invoices arrive as scanned PDFs from many vendors, with varied layouts, embedded tables, company logos, and
+        occasional handwritten annotations.</li>
+      <li>Product data sheets are stored as PDFs in an Azure Blob Storage account named <strong>storage1</strong> and
+        are not yet indexed for retrieval.</li>
+      <li>All agents in RangerOps are intended to share a single Azure AI Search resource for retrieval.</li>
+    </ul></div><div id="cs3-tab2" class="tab-panel"><ul>
+      <li>Deploy InvoiceBot using Azure AI Content Understanding to extract structured data from scanned vendor
+        invoices, including a vendor name, invoice number, total amount, a document category, and a generated
+        risk summary, directly from documents that include tables and logos.</li>
+      <li>Configure confidence-based routing so that only high-confidence invoice fields are auto-approved, and
+        lower-confidence fields are routed to a human reviewer.</li>
+      <li>Enable Ranger1 to retrieve grounded answers from the indexed product data sheets in storage1.</li>
+      <li>Give Ranger1 the ability to recall relevant details from a customer's previous conversations.</li>
+    </ul></div><div id="cs3-tab3" class="tab-panel"><ul>
+      <li>The model deployment used by Ranger1 must scale automatically to handle variable customer traffic
+        without requiring reserved throughput capacity.</li>
+      <li>The model version used by Ranger1 must not change automatically; any version change must be an explicit
+        action taken by the engineering team.</li>
+      <li>Azure AI Search credentials must be centrally managed at the project level and reusable by every agent
+        in RangerOps, without duplicating credentials per agent.</li>
+      <li>InvoiceBot's extraction schema must explicitly define, for each field, whether the value is extracted
+        verbatim from the document, classified from a fixed set of categories, or generated/inferred by the model.</li>
+      <li>Fields that are critical to financial approval must use stricter confidence thresholds than descriptive
+        or comment fields.</li>
+      <li>When InvoiceBot encounters a new vendor invoice format that produces lower-than-expected confidence
+        scores, the team must be able to improve extraction results without retraining a model from scratch.</li>
+    </ul></div><div id="cs3-tab4" class="tab-panel"><ul>
+      <li>API keys must NOT be used to access Foundry-deployed models or the Azure AI Search resource.</li>
+      <li>Access to the RangerOps project must be assigned to RangerDev and RangerTest members by using the
+        existing security groups.</li>
+      <li>Ranger1 must be protected against malicious instructions that could be hidden inside images embedded in
+        the product data sheets.</li>
+      <li>Ranger1 must answer questions only about Meridian products, and must not act as a general-purpose
+        assistant.</li>
+      <li>Actions that Ranger1's tools take that could have a significant business impact must not execute without
+        review.</li>
+    </ul></div><div id="cs3-tab5" class="tab-panel"><ul>
+      <li>Customers must experience continuity across sessions with Ranger1, including recall of relevant details
+        from earlier conversations.</li>
+      <li>Financial approval workflows for invoices must minimize manual review while maintaining accuracy for
+        high-value fields.</li>
+    </ul></div>
+  </div>
+
+  <div class="question-block">
+    <p><strong>For the ContractReferenceNumber field, the finance team wants the analyzer result to include the exact bounding-box location in the source PDF where the value was found, so a reviewer can jump straight to it. Which extraction method should this field use?</strong></p>
+  </div>
+
+  <div class="answer-area">
+    <div class="options"><label><input type="radio" name="q10" value="A"> A. generate, because generated values are more descriptive</label><label><input type="radio" name="q10" value="B"> B. classify, because classification is the most reliable method</label><label><input type="radio" name="q10" value="C"> C. extract, because it returns values as they literally appear at a specific location in the content</label><label><input type="radio" name="q10" value="D"> D. It does not matter; grounding is available identically for every method</label></div>
+    <script type="application/json" id="qdata">{"type": "mcq", "id": "q10", "correct": "C", "optionLabels": {"A": "generate, because generated values are more descriptive", "B": "classify, because classification is the most reliable method", "C": "extract, because it returns values as they literally appear at a specific location in the content", "D": "It does not matter; grounding is available identically for every method"}, "explanation": "The extract method is defined specifically for values that appear directly in the content and is the method built for literal, location-anchored text extraction, which is what grounding (page number and bounding box) is designed to point back to. Classify selects from a fixed set of categories rather than a location in the text, and generate can involve inference or summarization rather than a single literal source span, so extract is the most reliable choice when a precise source location is the goal."}</script>
+    <button class="btn" onclick="handleSubmit()">Submit Answer</button>
+    <div id="result" class="result"></div>
+  </div>
+
+  <div class="nav-row">
+    <a class="btn secondary" href="q9.html">&larr; Previous</a>
+    <a class="btn" href="q11.html">Next &rarr;</a>
+  </div>
+</div>
+<footer class="note">Original practice question for exam-prep purposes. Not affiliated with or sourced from Microsoft, ExamTopics, or any exam vendor.</footer>
+<script src="../assets/script.js"></script>
+</body>
+</html>

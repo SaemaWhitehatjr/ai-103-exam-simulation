@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-103 Case Study Practice - Meridian Outfitters</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <span class="badge">Unofficial practice case study</span>
+    <h1>Meridian Outfitters - RangerOps Project</h1>
+    <p>A 12-question, exhibit-based case study in the AI-103 exam format, spanning agent planning/governance and
+    high-difficulty Azure AI Content Understanding questions (Q8&ndash;Q12, marked &#9888;). Open the tabs on any
+    question to review all six exhibits. Original content for exam-prep purposes only.</p>
+    <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="progress-label" id="progressLabel">0 of 12 answered</div>
+    <div style="margin-top:10px;"><button class="reset-link" onclick="resetProgress()">Reset progress</button></div>
+  </div>
+
+  <div class="domain-section">
+    <div class="domain-header"><h2>Case Study Questions</h2><span class="weight">12 questions &middot; Q8&ndash;Q12 are high difficulty (Content Understanding)</span></div>
+    <div class="qlist"><a class="qlink" data-qid="q1" href="questions/q1.html">Q1</a><a class="qlink" data-qid="q2" href="questions/q2.html">Q2</a><a class="qlink" data-qid="q3" href="questions/q3.html">Q3</a><a class="qlink" data-qid="q4" href="questions/q4.html">Q4</a><a class="qlink" data-qid="q5" href="questions/q5.html">Q5</a><a class="qlink" data-qid="q6" href="questions/q6.html">Q6</a><a class="qlink" data-qid="q7" href="questions/q7.html">Q7</a><a class="qlink" data-qid="q8" href="questions/q8.html">Q8 &#9888;</a><a class="qlink" data-qid="q9" href="questions/q9.html">Q9 &#9888;</a><a class="qlink" data-qid="q10" href="questions/q10.html">Q10 &#9888;</a><a class="qlink" data-qid="q11" href="questions/q11.html">Q11 &#9888;</a><a class="qlink" data-qid="q12" href="questions/q12.html">Q12 &#9888;</a></div>
+  </div>
+
+  <footer class="note">Progress is stored locally in your browser (localStorage). Host this folder on a simple web
+  server for progress tracking to work reliably across pages.</footer>
+</div>
+
+<script src="assets/script.js"></script>
+<script>
+const ALL_QIDS = ["q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10", "q11", "q12"];
+function refreshProgress(){
+  let done = [];
+  try { done = JSON.parse(localStorage.getItem('ai103_done') || '[]'); } catch(e) {}
+  document.querySelectorAll('.qlink').forEach(a => {
+    const qid = a.getAttribute('data-qid');
+    if(done.includes(qid)) a.classList.add('done'); else a.classList.remove('done');
+  });
+  const count = ALL_QIDS.filter(id => done.includes(id)).length;
+  const pct = Math.round((count / ALL_QIDS.length) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = count + ' of ' + ALL_QIDS.length + ' answered';
+}
+function resetProgress(){
+  if(confirm('Clear your saved progress for this case study?')){
+    localStorage.removeItem('ai103_done');
+    refreshProgress();
+  }
+}
+refreshProgress();
+</script>
+</body>
+</html>
